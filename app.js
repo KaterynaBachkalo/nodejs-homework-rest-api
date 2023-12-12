@@ -20,10 +20,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-// app.all("*", (req, res) => {
-//   res.status(404).json({
-//     message: "Oops! Resource not found.",
-//   });
-// });
-
 module.exports = app;
