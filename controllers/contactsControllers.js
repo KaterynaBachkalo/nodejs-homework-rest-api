@@ -4,7 +4,7 @@ const { catchAsync, HttpError } = require("../utils");
 
 const contactsModels = require("../models");
 
-const addSchema = Joi.object({
+const schema = Joi.object({
   name: Joi.string()
     .min(3)
     .max(20)
@@ -23,12 +23,6 @@ const addSchema = Joi.object({
     .messages({ "any.required": "missing required phone field" }),
 });
 
-const updateSchema = Joi.object({
-  name: Joi.string().min(3).max(20).required(),
-  email: Joi.string().email().required(),
-  phone: Joi.string().min(3).max(15).required(),
-}).messages({ "any.required": "missing fields" });
-
 exports.listContacts = catchAsync(async (req, res) => {
   const result = await contactsModels.listContacts();
   res.status(200).json(result);
@@ -44,7 +38,7 @@ exports.getById = catchAsync(async (req, res) => {
 });
 
 exports.addContact = catchAsync(async (req, res) => {
-  const { error } = addSchema.validate(req.body);
+  const { error } = schema.validate(req.body);
 
   if (error) {
     throw new HttpError(400, error.message);
@@ -65,11 +59,12 @@ exports.removeContact = catchAsync(async (req, res) => {
 });
 
 exports.updateContact = catchAsync(async (req, res) => {
-  const { error } = updateSchema.validate(req.body);
+  const { error } = schema.validate(req.body);
 
-  if (error) {
-    throw new HttpError(400, error.message);
-  }
+  if (Object.keys(req.body).length === 0)
+    throw new HttpError(400, "missing fields");
+
+  if (error) throw new HttpError(400, error.message);
 
   const { contactId } = req.params;
   const result = await contactsModels.updateContact(contactId, req.body);
