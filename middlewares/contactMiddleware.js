@@ -6,8 +6,11 @@ const { schema, updateStatusSchema } = require("../utils/validators");
 const checkAddContact = catchAsync(async (req, res, next) => {
   const { value, error } = schema.validate(req.body);
 
+  if (Object.keys(req.body).length === 0)
+    throw new HttpError(400, "missing fields");
+
   if (error) {
-    throw new HttpError(400, "Invalid contact data!");
+    throw new HttpError(400, error.message);
   }
 
   const userExists = await Contact.exists({ email: value.email });
