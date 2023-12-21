@@ -1,36 +1,17 @@
-const Joi = require("joi");
-
 const { catchAsync, HttpError } = require("../utils");
 
-const contactsModels = require("../models");
-
-const schema = Joi.object({
-  name: Joi.string()
-    .min(3)
-    .max(20)
-    .required()
-    .messages({ "any.required": "missing required name field" }),
-
-  email: Joi.string()
-    .email()
-    .required()
-    .messages({ "any.required": "missing required email field" }),
-
-  phone: Joi.string()
-    .min(3)
-    .max(15)
-    .required()
-    .messages({ "any.required": "missing required phone field" }),
-});
+const { Contact } = require("../models");
 
 exports.listContacts = catchAsync(async (req, res) => {
-  const result = await contactsModels.listContacts();
+  const result = await Contact.find();
   res.status(200).json(result);
 });
 
 exports.getById = catchAsync(async (req, res) => {
   const { contactId } = req.params;
-  const result = await contactsModels.getById(contactId);
+
+  const result = await Contact.findById(contactId);
+
   if (!result) {
     throw new HttpError(404, "Not found");
   }
@@ -38,19 +19,14 @@ exports.getById = catchAsync(async (req, res) => {
 });
 
 exports.addContact = catchAsync(async (req, res) => {
-  const { error } = schema.validate(req.body);
-
-  if (error) {
-    throw new HttpError(400, error.message);
-  }
-
-  const result = await contactsModels.addContact(req.body);
-  res.status(201).json(result);
+  const newContact = await Contact.create(req.body);
+  res.status(201).json(newContact);
 });
 
 exports.removeContact = catchAsync(async (req, res) => {
   const { contactId } = req.params;
-  const result = await contactsModels.removeContact(contactId);
+
+  const result = await Contact.findByIdAndDelete(contactId);
 
   if (!result) {
     throw new HttpError(404, "Not found");
@@ -59,15 +35,29 @@ exports.removeContact = catchAsync(async (req, res) => {
 });
 
 exports.updateContact = catchAsync(async (req, res) => {
-  const { error } = schema.validate(req.body);
-
-  if (Object.keys(req.body).length === 0)
-    throw new HttpError(400, "missing fields");
-
-  if (error) throw new HttpError(400, error.message);
-
   const { contactId } = req.params;
-  const result = await contactsModels.updateContact(contactId, req.body);
+  const { name, email, phone } = req.body;
+  const result = await Contact.findByIdAndUpdate(
+    contactId,
+    { name, email, phone },
+    { new: true }
+  );
+
+  if (!result) {
+    throw new HttpError(404, "Not found");
+  }
+  res.status(200).json(result);
+});
+
+exports.updateStatusContact = catchAsync(async (req, res) => {
+  const { contactId } = req.params;
+  const { favorite } = req.body;
+
+  const result = await Contact.findByIdAndUpdate(
+    contactId,
+    { favorite },
+    { new: true }
+  );
 
   if (!result) {
     throw new HttpError(404, "Not found");
