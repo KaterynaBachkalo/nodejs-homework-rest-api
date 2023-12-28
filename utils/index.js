@@ -1,5 +1,15 @@
 const catchAsync = require("./catchAsync");
 const HttpError = require("./httpError");
-const schema = require("./validators");
+const {
+  contactValidSchema,
+  updateStatusValidSchema,
+  userValidSchema,
+} = require("./validators");
 
-module.exports = { catchAsync, HttpError, schema };
+module.exports = {
+  catchAsync,
+  HttpError,
+  contactValidSchema,
+  updateStatusValidSchema,
+  userValidSchema,
+};

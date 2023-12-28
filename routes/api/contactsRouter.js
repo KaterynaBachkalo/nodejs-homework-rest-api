@@ -1,8 +1,10 @@
 const express = require("express");
-const contactsControllers = require("../../controllers");
-const { contactMiddleware } = require("../../middlewares");
+const { contactsControllers } = require("../../controllers");
+const { contactMiddleware, authMiddleware } = require("../../middlewares");
 
 const router = express.Router();
+
+router.use(authMiddleware.protect);
 
 router
   .route("/")
