@@ -36,3 +36,10 @@ exports.userValidSchema = Joi.object({
     .required()
     .messages({ "any.required": "Email is required" }),
 });
+
+exports.updateSubSchema = Joi.object({
+  subscription: Joi.string()
+    .required()
+    .valid("starter", "pro", "business")
+    .messages({ msg: "This subscription doesn't exist" }),
+});

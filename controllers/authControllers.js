@@ -1,6 +1,6 @@
 const { User } = require("../models");
 const { userServices } = require("../services");
-const { catchAsync } = require("../utils");
+const { catchAsync, validSchemas } = require("../utils");
 
 exports.registration = catchAsync(async (req, res) => {
   const { user } = await userServices.registration(req.body);
@@ -29,5 +29,21 @@ exports.getCurrentUser = catchAsync(async (req, res) => {
 
   res.status(200).json({
     user: { email, subscription },
+  });
+});
+
+exports.updateSubscription = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+
+  const { subscription } = req.body;
+
+  const user = await User.findByIdAndUpdate(
+    _id,
+    { subscription },
+    { new: true }
+  );
+
+  res.status(200).json({
+    user: { email: user.email, subscription: user.subscription },
   });
 });

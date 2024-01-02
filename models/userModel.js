@@ -37,6 +37,6 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.checkPassword = (candidate, passwdHash) =>
   compare(candidate, passwdHash);
 
-const User = model("user", userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;

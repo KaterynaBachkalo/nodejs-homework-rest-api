@@ -12,8 +12,16 @@ router.post(
 
 router.post("/login", authMiddleware.checkLoginData, authControllers.login);
 
-router.post("/logout", authMiddleware.protect, authControllers.logout);
+router.use(authMiddleware.protect);
 
-router.get("/current", authMiddleware.protect, authControllers.getCurrentUser);
+router.post("/logout", authControllers.logout);
+
+router.get("/current", authControllers.getCurrentUser);
+
+router.patch(
+  "/",
+  authMiddleware.checkSubscriptionExist,
+  authControllers.updateSubscription
+);
 
 module.exports = router;

@@ -18,7 +18,7 @@ const contactSchema = new Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
     },
   },
   {
@@ -26,6 +26,6 @@ const contactSchema = new Schema(
   }
 );
 
-const Contact = model("contact", contactSchema);
+const Contact = model("Contact", contactSchema);
 
 module.exports = Contact;
