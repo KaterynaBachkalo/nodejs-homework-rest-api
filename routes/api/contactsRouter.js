@@ -8,8 +8,7 @@ router.use(authMiddleware.protect);
 
 router
   .route("/")
-  .get(contactsControllers.getFavoriteContacts)
-  .get(contactsControllers.listContacts)
+  .get(contactsControllers.getContacts)
   .post(contactMiddleware.checkAddContact, contactsControllers.addContact);
 
 router.use("/:contactId", contactMiddleware.checkContactId);

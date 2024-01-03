@@ -1,12 +1,12 @@
 const { model, Schema } = require("mongoose");
 const { genSalt, hash, compare } = require("bcrypt");
-// const { userSubscription } = require("../constants");
 
 const userSchema = new Schema(
   {
     password: {
       type: String,
       required: [true, "Set password for user"],
+      // select: false,
     },
     email: {
       type: String,

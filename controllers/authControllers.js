@@ -1,6 +1,6 @@
 const { User } = require("../models");
 const { userServices } = require("../services");
-const { catchAsync, validSchemas } = require("../utils");
+const { catchAsync } = require("../utils");
 
 exports.registration = catchAsync(async (req, res) => {
   const { user } = await userServices.registration(req.body);

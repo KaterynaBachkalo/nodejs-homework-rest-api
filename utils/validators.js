@@ -1,7 +1,6 @@
 const Joi = require("joi");
-// const { regex } = require("../constants");
 
-exports.contactValidSchema = Joi.object({
+exports.addContactSchema = Joi.object({
   name: Joi.string()
     .min(3)
     .max(20)
@@ -20,13 +19,13 @@ exports.contactValidSchema = Joi.object({
     .messages({ "any.required": "missing required phone field" }),
 });
 
-exports.updateStatusValidSchema = Joi.object({
+exports.updateStatusSchema = Joi.object({
   favorite: Joi.boolean()
     .required()
     .messages({ "any.required": "missing required favorite field" }),
 });
 
-exports.userValidSchema = Joi.object({
+exports.addUserSchema = Joi.object({
   password: Joi.string().min(6).required().messages({
     "any.required": "Set password for user",
   }),
@@ -42,4 +41,12 @@ exports.updateSubSchema = Joi.object({
     .required()
     .valid("starter", "pro", "business")
     .messages({ msg: "This subscription doesn't exist" }),
+});
+
+exports.contactListSchema = Joi.object({
+  limit: Joi.number(),
+
+  page: Joi.number(),
+
+  favorite: Joi.boolean(),
 });

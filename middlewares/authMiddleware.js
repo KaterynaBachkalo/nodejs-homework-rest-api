@@ -3,7 +3,7 @@ const { userServices, jwtServices } = require("../services");
 const { catchAsync, validSchemas, HttpError } = require("../utils");
 
 exports.checkRegistrationData = catchAsync(async (req, res, next) => {
-  const { value, error } = validSchemas.userValidSchema.validate(req.body);
+  const { value, error } = validSchemas.addUserSchema.validate(req.body);
 
   if (error) throw new HttpError(400, error.message);
 
@@ -15,7 +15,7 @@ exports.checkRegistrationData = catchAsync(async (req, res, next) => {
 });
 
 exports.checkLoginData = catchAsync(async (req, res, next) => {
-  const { value, error } = validSchemas.userValidSchema.validate(req.body);
+  const { value, error } = validSchemas.addUserSchema.validate(req.body);
 
   if (error) throw new HttpError(400, error.message);
 

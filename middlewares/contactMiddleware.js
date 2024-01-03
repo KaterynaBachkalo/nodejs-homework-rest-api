@@ -4,7 +4,7 @@ const { catchAsync, HttpError } = require("../utils");
 const { validSchemas } = require("../utils");
 
 const checkAddContact = catchAsync(async (req, res, next) => {
-  const { value, error } = validSchemas.contactValidSchema.validate(req.body);
+  const { value, error } = validSchemas.addContactSchema.validate(req.body);
 
   if (Object.keys(req.body).length === 0)
     throw new HttpError(400, "missing fields");
@@ -38,7 +38,7 @@ const checkContactId = catchAsync(async (req, res, next) => {
 });
 
 const checkUpdateContact = catchAsync(async (req, res, next) => {
-  const { error } = validSchemas.contactValidSchema.validate(req.body);
+  const { error } = validSchemas.addContactSchema.validate(req.body);
 
   if (Object.keys(req.body).length === 0)
     throw new HttpError(400, "missing fields");
@@ -49,7 +49,7 @@ const checkUpdateContact = catchAsync(async (req, res, next) => {
 });
 
 const checkStatusContact = catchAsync(async (req, res, next) => {
-  const { error } = validSchemas.updateStatusValidSchema.validate(req.body);
+  const { error } = validSchemas.updateStatusSchema.validate(req.body);
 
   if (Object.keys(req.body).length === 0)
     throw new HttpError(400, "missing field favorite");

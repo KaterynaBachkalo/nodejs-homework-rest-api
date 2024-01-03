@@ -1,12 +1,7 @@
-const { catchAsync, HttpError } = require("../utils");
+const { catchAsync, HttpError, validSchemas } = require("../utils");
 
 const { Contact } = require("../models");
 const { contactServices } = require("../services");
-
-exports.listContacts = catchAsync(async (req, res) => {
-  const result = await Contact.find();
-  res.status(200).json(result);
-});
 
 exports.getById = catchAsync(async (req, res) => {
   const { contactId } = req.params;
@@ -21,6 +16,7 @@ exports.getById = catchAsync(async (req, res) => {
 
 exports.addContact = catchAsync(async (req, res) => {
   // const newContact = await Contact.create(req.body);
+
   const newContact = await contactServices.createContact(req.body, req.user);
 
   res.status(201).json(newContact);
@@ -40,6 +36,7 @@ exports.removeContact = catchAsync(async (req, res) => {
 exports.updateContact = catchAsync(async (req, res) => {
   const { contactId } = req.params;
   const { name, email, phone } = req.body;
+
   const result = await Contact.findByIdAndUpdate(
     contactId,
     { name, email, phone },
@@ -68,7 +65,13 @@ exports.updateStatusContact = catchAsync(async (req, res) => {
   res.status(200).json(result);
 });
 
-exports.getFavoriteContacts = catchAsync(async (req, res) => {
+exports.getContacts = catchAsync(async (req, res) => {
+  const { error } = validSchemas.contactListSchema.validate(req.query);
+
+  if (error) {
+    throw new HttpError(400, error.message);
+  }
+
   const { contacts, total } = await contactServices.getContacts(
     req.query,
     req.user
