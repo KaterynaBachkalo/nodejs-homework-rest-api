@@ -1,6 +1,7 @@
 const { catchAsync, HttpError } = require("../utils");
 
 const { Contact } = require("../models");
+const { contactServices } = require("../services");
 
 exports.listContacts = catchAsync(async (req, res) => {
   const result = await Contact.find();
@@ -19,7 +20,9 @@ exports.getById = catchAsync(async (req, res) => {
 });
 
 exports.addContact = catchAsync(async (req, res) => {
-  const newContact = await Contact.create(req.body);
+  // const newContact = await Contact.create(req.body);
+  const newContact = await contactServices.createContact(req.body, req.user);
+
   res.status(201).json(newContact);
 });
 
@@ -63,4 +66,21 @@ exports.updateStatusContact = catchAsync(async (req, res) => {
     throw new HttpError(404, "Not found");
   }
   res.status(200).json(result);
+});
+
+exports.getFavoriteContacts = catchAsync(async (req, res) => {
+  const { contacts, total } = await contactServices.getContacts(
+    req.query,
+    req.user
+  );
+
+  res.status(200).json({
+    contacts,
+    total,
+    owner: {
+      _id: req.user._id,
+      email: req.user.email,
+      subscription: req.user.subscription,
+    },
+  });
 });
