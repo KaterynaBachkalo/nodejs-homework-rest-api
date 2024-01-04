@@ -1,4 +1,5 @@
 const { Contact } = require("../models");
+const { HttpError } = require("../utils");
 
 exports.createContact = (contactData, owner) => {
   return Contact.create({
@@ -21,7 +22,7 @@ exports.getContacts = async (query, owner) => {
   // INIT DB QUERY ================================
   const contactsQuery = Contact.find(findOptions).populate({
     path: "owner",
-    select: ["-token", "-password"],
+    select: "_id",
   });
 
   // PAGINATION FEATURE =============================
@@ -41,4 +42,15 @@ exports.getContacts = async (query, owner) => {
     contacts,
     total,
   };
+};
+
+exports.checkOwner = async (result, req) => {
+  const ownerId = result.owner.valueOf();
+  const currentId = req.user._id.valueOf();
+
+  if (ownerId !== currentId) {
+    throw new HttpError(404, "Not found");
+  }
+
+  return result;
 };

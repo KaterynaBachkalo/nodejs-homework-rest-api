@@ -27,9 +27,7 @@ exports.logout = catchAsync(async (req, res) => {
 exports.getCurrentUser = catchAsync(async (req, res) => {
   const { email, subscription } = req.user;
 
-  res.status(200).json({
-    user: { email, subscription },
-  });
+  res.status(200).json({ email, subscription });
 });
 
 exports.updateSubscription = catchAsync(async (req, res) => {

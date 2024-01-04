@@ -13,7 +13,10 @@ const checkAddContact = catchAsync(async (req, res, next) => {
     throw new HttpError(400, error.message);
   }
 
-  const userExists = await Contact.exists({ email: value.email });
+  const userExists = await Contact.exists({
+    email: value.email,
+    _id: Types.ObjectId._id,
+  });
 
   if (userExists)
     throw new HttpError(409, "User with this email already exists..");
