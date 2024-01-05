@@ -18,7 +18,8 @@ exports.getById = catchAsync(async (req, res) => {
 });
 
 exports.addContact = catchAsync(async (req, res) => {
-  const newContact = await contactServices.createContact(req.body, req.user);
+  const { _id } = req.user;
+  const newContact = await contactServices.createContact(req.body, _id);
 
   res.status(201).json(newContact);
 });
