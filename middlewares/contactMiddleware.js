@@ -1,10 +1,10 @@
 const { Types } = require("mongoose");
 const { Contact } = require("../models");
 const { catchAsync, HttpError } = require("../utils");
-const { schema, updateStatusSchema } = require("../utils/validators");
+const { validSchemas } = require("../utils");
 
 const checkAddContact = catchAsync(async (req, res, next) => {
-  const { value, error } = schema.validate(req.body);
+  const { value, error } = validSchemas.addContactSchema.validate(req.body);
 
   if (Object.keys(req.body).length === 0)
     throw new HttpError(400, "missing fields");
@@ -13,7 +13,10 @@ const checkAddContact = catchAsync(async (req, res, next) => {
     throw new HttpError(400, error.message);
   }
 
-  const userExists = await Contact.exists({ email: value.email });
+  const userExists = await Contact.exists({
+    email: value.email,
+    _id: Types.ObjectId._id,
+  });
 
   if (userExists)
     throw new HttpError(409, "User with this email already exists..");
@@ -38,7 +41,7 @@ const checkContactId = catchAsync(async (req, res, next) => {
 });
 
 const checkUpdateContact = catchAsync(async (req, res, next) => {
-  const { error } = schema.validate(req.body);
+  const { error } = validSchemas.addContactSchema.validate(req.body);
 
   if (Object.keys(req.body).length === 0)
     throw new HttpError(400, "missing fields");
@@ -49,7 +52,7 @@ const checkUpdateContact = catchAsync(async (req, res, next) => {
 });
 
 const checkStatusContact = catchAsync(async (req, res, next) => {
-  const { error } = updateStatusSchema.validate(req.body);
+  const { error } = validSchemas.updateStatusSchema.validate(req.body);
 
   if (Object.keys(req.body).length === 0)
     throw new HttpError(400, "missing field favorite");
