@@ -58,8 +58,10 @@ exports.updateAvatar = catchAsync(async (req, res) => {
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarDir, filename);
 
-  const image = await Jimp.read(tempUpload);
-  image.resize(250, 250).writeAsync(tempUpload);
+  const avatar = await Jimp.read(tempUpload);
+  avatar
+    .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE)
+    .writeAsync(tempUpload);
 
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join("avatars", filename);
