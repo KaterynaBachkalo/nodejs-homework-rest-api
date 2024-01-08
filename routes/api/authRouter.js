@@ -14,6 +14,12 @@ router.post("/login", authMiddleware.checkLoginData, authControllers.login);
 
 router.use(authMiddleware.protect);
 
+router.patch(
+  "/avatars",
+  authMiddleware.uploadAvatar,
+  authControllers.updateAvatar
+);
+
 router.post("/logout", authControllers.logout);
 
 router.get("/current", authControllers.getCurrentUser);
