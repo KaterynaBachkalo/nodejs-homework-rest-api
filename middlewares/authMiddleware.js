@@ -1,5 +1,5 @@
 const { User } = require("../models");
-const { userServices, jwtServices } = require("../services");
+const { userServices, jwtServices, upload } = require("../services");
 const { catchAsync, validSchemas, HttpError } = require("../utils");
 
 exports.checkRegistrationData = catchAsync(async (req, res, next) => {
@@ -52,3 +52,5 @@ exports.checkSubscriptionExist = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+exports.uploadAvatar = upload.single("avatar");

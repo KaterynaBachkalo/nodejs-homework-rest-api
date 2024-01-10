@@ -1,13 +1,16 @@
+const fs = require("fs/promises");
+const path = require("path");
 const { User } = require("../models");
 const { userServices } = require("../services");
-const { catchAsync } = require("../utils");
+const { catchAsync, HttpError } = require("../utils");
+const Jimp = require("jimp");
 
 exports.registration = catchAsync(async (req, res) => {
   const { user } = await userServices.registration(req.body);
 
-  res
-    .status(201)
-    .json({ user: { email: user.email, subscription: user.subscription } });
+  res.status(201).json({
+    user: { email: user.email, subscription: user.subscription },
+  });
 });
 
 exports.login = catchAsync(async (req, res) => {
@@ -43,5 +46,34 @@ exports.updateSubscription = catchAsync(async (req, res) => {
 
   res.status(200).json({
     user: { email: user.email, subscription: user.subscription },
+  });
+});
+
+const avatarDir = path.join(__dirname, "../", "public", "avatars");
+
+exports.updateAvatar = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+
+  if (!req.file) {
+    throw new HttpError(400, "Please, upload the image");
+  }
+
+  const { path: tempUpload, originalname } = req.file;
+
+  const filename = `${_id}_${originalname}`;
+  const resultUpload = path.join(avatarDir, filename);
+
+  const avatar = await Jimp.read(tempUpload);
+  avatar
+    .cover(250, 250, Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE)
+    .writeAsync(tempUpload);
+
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", filename);
+
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  res.status(200).json({
+    avatarURL,
   });
 });
