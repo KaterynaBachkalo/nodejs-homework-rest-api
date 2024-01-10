@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const { User } = require("../models");
 const { userServices } = require("../services");
-const { catchAsync } = require("../utils");
+const { catchAsync, HttpError } = require("../utils");
 const Jimp = require("jimp");
 
 exports.registration = catchAsync(async (req, res) => {
@@ -53,6 +53,11 @@ const avatarDir = path.join(__dirname, "../", "public", "avatars");
 
 exports.updateAvatar = catchAsync(async (req, res) => {
   const { _id } = req.user;
+
+  if (!req.file) {
+    throw new HttpError(400, "Please, upload the image");
+  }
+
   const { path: tempUpload, originalname } = req.file;
 
   const filename = `${_id}_${originalname}`;
