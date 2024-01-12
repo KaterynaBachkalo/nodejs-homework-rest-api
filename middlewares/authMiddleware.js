@@ -14,6 +14,16 @@ exports.checkRegistrationData = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.resendVerifyEmail = catchAsync(async (req, res, next) => {
+  const { value, error } = validSchemas.emailSchema.validate(req.body);
+
+  if (error) throw new HttpError(400, "missing required field email");
+
+  req.body = value;
+
+  next();
+});
+
 exports.checkLoginData = catchAsync(async (req, res, next) => {
   const { value, error } = validSchemas.addUserSchema.validate(req.body);
 

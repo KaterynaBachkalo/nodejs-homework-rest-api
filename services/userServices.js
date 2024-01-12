@@ -9,10 +9,11 @@ exports.checkUserEmailExists = async (email) => {
   if (emailExists) throw new HttpError(409, "Email in use");
 };
 
-exports.registration = async (data) => {
+exports.registration = async (data, verificationToken) => {
   const newUserData = {
     ...data,
     subscription: "starter",
+    verificationToken,
   };
 
   const newUser = await User.create(newUserData);
@@ -28,6 +29,8 @@ exports.login = async ({ email, password }) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) throw new HttpError(401, "Email or password is wrong");
+
+  if (!user.verify) throw new HttpError(401, "User not found");
 
   const passwdIsValid = await user.checkPassword(password, user.password);
 

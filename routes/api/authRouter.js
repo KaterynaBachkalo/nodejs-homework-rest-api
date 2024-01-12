@@ -12,6 +12,14 @@ router.post(
 
 router.post("/login", authMiddleware.checkLoginData, authControllers.login);
 
+router.get("/verify/:verificationToken", authControllers.verifyEmail);
+
+router.post(
+  "/verify",
+  authMiddleware.resendVerifyEmail,
+  authControllers.resendVerifyEmail
+);
+
 router.use(authMiddleware.protect);
 
 router.patch(

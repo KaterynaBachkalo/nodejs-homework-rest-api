@@ -3,6 +3,8 @@ const serverConfig = {
   PORT: process.env.PORT || 3000,
   jwtSecret: process.env.JWT_SECRET ?? "secret-phrase",
   jwtExpires: process.env.JWT_EXPIRES ?? "20h",
+  sendgridApiKey: process.env.SENDGRID_API_KEY ?? "sendgrid-Api-Key",
+  emailSender: process.env.EMAIL_SENDER ?? "user@gmail.com",
 };
 
 module.exports = serverConfig;

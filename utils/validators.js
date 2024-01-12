@@ -19,6 +19,10 @@ exports.addContactSchema = Joi.object({
     .messages({ "any.required": "missing required phone field" }),
 });
 
+exports.emailSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
 exports.updateStatusSchema = Joi.object({
   favorite: Joi.boolean()
     .required()
