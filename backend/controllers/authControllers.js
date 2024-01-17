@@ -5,8 +5,7 @@ const { userServices, emailServices } = require("../services");
 const { catchAsync, HttpError } = require("../utils");
 const Jimp = require("jimp");
 const { nanoid } = require("nanoid");
-
-const { BASE_URL } = process.env;
+const { serverConfig } = require("../configs");
 
 exports.registration = catchAsync(async (req, res) => {
   const verificationToken = nanoid();
@@ -15,7 +14,7 @@ exports.registration = catchAsync(async (req, res) => {
   const verifyEmail = {
     to: user.email,
     subject: "Verify email",
-    html: `<a target="_black" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify</a>`,
+    html: `<a target="_black" href="${serverConfig.baseURL}/api/users/verify/${verificationToken}">Click verify</a>`,
   };
 
   await emailServices.sendEmail(verifyEmail);
@@ -55,7 +54,7 @@ exports.resendVerifyEmail = catchAsync(async (req, res) => {
   const verifyEmail = {
     to: user.email,
     subject: "Verify email",
-    html: `<a target="_black" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click verify</a>`,
+    html: `<a target="_black" href="${serverConfig.baseURL}/api/users/verify/${user.verificationToken}">Click verify</a>`,
   };
 
   await emailServices.sendEmail(verifyEmail);
